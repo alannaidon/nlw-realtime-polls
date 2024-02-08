@@ -8,8 +8,32 @@ datasource db {
 }
 
 model Poll {
-  id        String   @id @default(uuid())
+  id        String       @id @default(uuid())
   title     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @default(now())
+  options   PollOption[]
+  votes     Vote[]
+}
+
+model PollOption {
+  id     String @id @default(uuid())
+  title  String
+  pollId String
+
+  poll  Poll   @relation(fields: [pollId], references: [id]) // Relation with Poll table
+  votes Vote[] // relation with Vote table
+}
+
+model Vote {
+  id           Int      @id @default(autoincrement())
+  sessionId    String
+  pollId       String
+  pollOptionId String
+  createdAt    DateTime @default(now())
+
+  pollOption PollOption @relation(fields: [pollOptionId], references: [id]) // Relation with options table
+  poll       Poll       @relation(fields: [pollId], references: [id]) // Relation with Poll table
+
+  @@unique([sessionId, pollId]) // Making sure a user (sessionId) votes only ONCE per poll (pollId)
 }

@@ -6,3 +6,5 @@ Using:
 - Docker
 - Prisma / Postgres
 - Zod for validation
+- Redis
+- Websocket
